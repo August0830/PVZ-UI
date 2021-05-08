@@ -27,10 +27,11 @@ int main(int argc, char * argv[])
     getchar();
     Shooter* fshot = new Shooter(0, 2);
     garden.garden_pos[fshot->row][fshot->col]=fshot;
+    
     Shooter* shot = new Shooter(1, 3);
     //shot = new Shooter(1, 2);
     garden.garden_pos[shot->row][shot->col]=shot;
-    shot = new Shooter(2, 1);
+    shot = new Shooter(2, 0);
     garden.garden_pos[shot->row][shot->col] = shot;
     garden.print_garden();
     getchar();

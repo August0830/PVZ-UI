@@ -22,6 +22,9 @@ extern int bomb_sun_price_val;
 extern int z_normal_att;
 extern int z_normal_life;
 extern int z_normal_speed;
+extern int efficient_sun_price_val;
+extern int pumpkin_life;
+
 using namespace std;
 class Zombie;
 class Plant;
@@ -88,8 +91,10 @@ public:
 	char type;//供花园区分植物和僵尸
 	string plant_name;//细分不同的植物类别
 	string func_type;
+	int pumpkin_protecter;
 	//功能类型，包括射手类(Shooter)，炸弹类(Bomb) 防御类(Defense) 效果型(Efficient)等
-	Plant() :row(0), col(0), life(30), sun_price(0), type('p'), plant_name("plant"),func_type("plant") {};
+	Plant() :row(0), col(0), life(30), sun_price(0), type('p'), 
+		plant_name("plant"),func_type("plant"),pumpkin_protecter(0) {};
 	int get_col()const { return col; }//供外界调试时获取列坐标
 	void get_hurt(Zombie* zombie);//被僵尸攻击
 	int price()const { return sun_price; }//供外界调试时获取购买植物所需阳光数
@@ -99,13 +104,30 @@ class Sunflower :public Plant
 	friend class GardenBoard;
 public:
 	Sunflower(int r, int c) {
-		row = r; col = c; plant_name = "Sunflower";
+		row = r; col = c; 
+		plant_name = "Sunflower";
 		func_type = "Efficient";
 		sun_price = 10;
 		life = 20;
 	}
 
 };
+class Garlic :public Plant
+{
+	friend class GardenBoard;
+public:
+	Garlic(int r, int c)
+	{
+		row = r;
+		col = c;
+		sun_price = efficient_sun_price_val;
+		life = 20;
+		plant_name = "Garlic";
+		func_type = "Efficient";
+	}
+	void expel(Zombie* zom, GardenBoard* garden);
+};
+
 class Shooter :public Plant//
 {
 	friend class GardenBoard;
@@ -370,7 +392,7 @@ public:
 		col = c;
 		life = z_normal_life * 3;
 		zombie_name = "Stone Zombie";
-		stone = 1;
+		stone = 2;
 	}
 	void print_Z() { cout << zombie_name << " " << life; }
 	int attacking();

@@ -73,6 +73,12 @@ void GardenBoard::print_garden()
             tst.Y = 7 * i + adjust_pos[make_pair(i, ((Plant*)plant)->col)];
             SetConsoleCursorPosition(hOutput, tst);
             cout << ((Plant*)plant)->plant_name<<" "<< ((Plant*)plant)->life;
+            if (((Plant*)plant)->pumpkin_protecter > 0)
+            {
+                tst.Y++;
+                SetConsoleCursorPosition(hOutput, tst);
+                cout << "pumpkin: " << ((Plant*)plant)->pumpkin_protecter;
+            }
         }
         for (auto zombie : garden_pos[i])
         {
@@ -121,6 +127,8 @@ void GardenBoard::print_garden()
     cout << "f.High Nut " << defense_sun_price_val + 10;
     cout << " g.Squash " << bomb_sun_price_val;
     cout << " h.Cherry Bomb " << bomb_sun_price_val + 10;
+    cout << " i.Garlic " << efficient_sun_price_val;
+    cout << " j.Pumpkin " << efficient_sun_price_val;
     tst.X = 0; tst.Y = 29;
     SetConsoleCursorPosition(hOutput, tst);//最后的输出提示
     //CloseHandle(hOutput);
@@ -181,7 +189,7 @@ bool GardenBoard::random_generate_zom()
         zombie_cnt[zm->row]++;
         int val = rand() % 5;
         //cout << val << " v";
-        /*if (val == 0)
+        if (val == 0)
         {
             Zombie* zm_more = new Zombie_Normal(row_ini, col_total - 1);
             garden_pos[zm_more->row].push_back(zm_more);
@@ -279,28 +287,37 @@ void GardenBoard::refresh_state(HANDLE& hOutput, HANDLE& hIn, DWORD start)
                     if (garden_pos_cnt[zom->row][zom->col]!=0)
                         //(garden_pos[zom->row][zom->col - 1])
                     {
+                        Plant* stone_attack_obj = NULL;
+                        Stone_Zombie* stonezm = NULL;
                         for (auto ptr : garden_pos[zom->row])
                         {
                             if (!ptr)
                                 continue;
                             Plant* plt = (Plant*)ptr;
-                                //(Plant*)(garden_pos[zom->row][zom->col - 1]);
-                            //if (plt->type == 'p')
                             
                             //找到左侧的植物 
-                            if (zom->zombie_name == "Stone Zombie" && plt->type == 'p')
+                            if (zom->zombie_name == "Stone Zombie" 
+                                && plt->type == 'p' &&((Stone_Zombie*)zom)->stone > 0)
                             {
-                                if(((Stone_Zombie*)zom)->stone>0)
-                                    plt->get_hurt((Stone_Zombie*)zom);
+                                if (!stonezm)
+                                    stonezm = (Stone_Zombie*)zom;
+                                if (!stone_attack_obj)
+                                    stone_attack_obj = plt;
+                                else if(plt->pumpkin_protecter>0)
+                                    stone_attack_obj = plt;
+                                    //plt->get_hurt((Stone_Zombie*)zom);
                             }
                             if( plt->type == 'p' && plt->col == zom->col - 1)//僵尸遇到了植物
                             {     
-                                if (zom->zombie_name == "Pole Zombie")
+                                if (zom->zombie_name == "Pole Zombie" && plt->plant_name != "High Nut")
                                 {
                                     if (((Pole_Zombie*)zom)->pole > 0)
                                         ((Pole_Zombie*)zom)->jump(garden_pos_cnt);
                                 }
-                                //if
+                                else if (plt->plant_name == "Garlic")
+                                {
+                                    ((Garlic*)plt)->expel(zom,this);
+                                }
                                 else
                                     plt->get_hurt(zom);
                                 // COORD output = { 32,24 };
@@ -308,7 +325,8 @@ void GardenBoard::refresh_state(HANDLE& hOutput, HANDLE& hIn, DWORD start)
                                  //cout << "Zombie attacked! ";
                             }
                         }
-                        
+                        if (stonezm && stone_attack_obj)
+                            stone_attack_obj->get_hurt(stonezm);//stone zombie attack
                     }
                 }
             }
@@ -394,11 +412,11 @@ void GardenBoard::refresh_state(HANDLE& hOutput, HANDLE& hIn, DWORD start)
               
             }
         }
-        if (turn - shop_turn-1>1)
+        //if (turn - shop_turn-1>1)
         {
             if (PeekConsoleInput(hIn, &Rec, 1, &res))
             {
-                //cout << "peak";
+                //ReadConsoleInput(hIn, &Rec, 1, &res);
                 if (Rec.EventType == KEY_EVENT && Rec.Event.KeyEvent.bKeyDown &&
                     Rec.Event.KeyEvent.uChar.AsciiChar == 'b' || Rec.Event.KeyEvent.uChar.AsciiChar == 'B')
                 {
@@ -432,7 +450,7 @@ void GardenBoard::open_shop(HANDLE& hIn)
                 //display.Y++;
                 //SetConsoleCursorPosition(hOutput,display);
                 char choice = 0;
-                vector<char> shop_list{ 'a','b','c','d' ,'e','f','g','h'};
+                vector<char> shop_list{ 'a','b','c','d' ,'e','f','g','h','i','j'};
                 while (1)
                 {
                     ReadConsoleInput(hIn, &Rec, 1, &res);
@@ -619,6 +637,40 @@ void GardenBoard::open_shop(HANDLE& hIn)
                                     delete nt;
                                 }
                                 break;
+                            }
+                            case 'i':
+                            {
+                                Garlic* nt = new Garlic(row, col);
+                                if (sun_deposit > nt->sun_price)
+                                {
+                                    //garden_pos[row][col] = shot;
+                                    garden_pos[row].push_back(nt);
+                                    garden_pos_cnt[row][col]++;
+                                    cout << "Garlic!\n";
+                                    sun_deposit -= nt->sun_price;
+                                }
+                                else
+                                {
+                                    cout << "You are so poor!\n";
+                                    delete nt;
+                                }
+                                break;
+                            }
+                            case 'j':
+                            {
+                                bool check = false;
+                                for (auto ptr : garden_pos[row])
+                                {
+                                    if (ptr && ((Plant*)ptr)-> col == col &&((Plant*)ptr)->type == 'p')
+                                    {
+                                        if(sun_deposit > efficient_sun_price_val)
+                                            ((Plant*)ptr)->pumpkin_protecter = pumpkin_life;
+                                        else
+                                            cout << "You are so poor!\n";
+                                    }
+                                }
+                                if (!check)
+                                    cout << "No plant for Pumpkin to protect!\n";
                             }
                             default:break;
                             }

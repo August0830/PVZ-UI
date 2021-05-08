@@ -10,13 +10,28 @@ int defense_life_val = 45;
 int defense_sun_price_val = 25;
 int bullet_fly_speed = 1;
 int bomb_sun_price_val = 35;
+int efficient_sun_price_val = 20;
+int pumpkin_life = 50;
 void Plant::get_hurt(Zombie* zombie)
 {
 	if (zombie->zombie_name == "Stone Zombie")
-		life -= ((Stone_Zombie*)zombie)->attacking();
+	{
+		if (pumpkin_protecter > 0)
+			pumpkin_protecter -= ((Stone_Zombie*)zombie)->attacking();
+			// -= zombie->attacking();
+		else
+			life -= ((Stone_Zombie*)zombie)->attacking();
+	}
+		
 	else
-		life -= zombie->attacking();
+	{
+		if (pumpkin_protecter > 0)
+			pumpkin_protecter -= zombie->attacking();
+		else
+			life -= zombie->attacking();
 		//cout << "Plant life " << life<<endl;
+	}
+		
 }
 void Shooter::attacking()//通过产生子弹来完成
 {
@@ -87,4 +102,25 @@ void Cherry_Bomb::attacking(vector<vector<void*>>& garden_pos)
 		}
 	}
 	life = -1;
+}
+void Garlic::expel(Zombie* zom,GardenBoard* garden)
+{
+	life = -1;
+	int away = 0;
+	if (rand() % 2 == 0)
+		away = 1;
+	else
+		away = -1;
+	garden->garden_pos_cnt[zom->row][zom->col]--;
+	vector<void*>::iterator it = garden->garden_pos[zom->row].begin();
+	for (;it!=garden->garden_pos[zom->row].end();)
+	{
+		if ((*it) == (void*)zom)
+			it = garden->garden_pos[zom->row].erase(it);
+		else
+			it++;
+	}
+	zom->row = (3 +zom->row+away) % 3;
+	garden->garden_pos[zom->row].push_back(zom);
+	garden->garden_pos_cnt[zom->row][zom->col]++;
 }

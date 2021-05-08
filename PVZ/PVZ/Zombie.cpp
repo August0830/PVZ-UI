@@ -26,7 +26,7 @@ bool Zombie::move(vector<vector<int>>& garden_pos_cnt, int x0, int y0)
             //花园的信息和僵尸的信息同时维护
             //garden_pos[x0][y0] = NULL;
         }
-        if (newy <= 0)
+        if (newy <= 0 && life>0)
             GAME_FAIL = true;
     }
     if (turn % speed == 0)
@@ -41,7 +41,7 @@ bool Zombie::move(vector<vector<int>>& garden_pos_cnt, int x0, int y0)
             //花园的信息和僵尸的信息同时维护
             //garden_pos[x0][y0] = NULL;
         }
-        if (newy <= 0)
+        if (newy <= 0 && life>0)
             GAME_FAIL = true;
     }
     
@@ -83,7 +83,7 @@ void Jester_Zombie::self_attacking(vector<vector<void*>>& garden_pos)
 void Pole_Zombie::jump(vector<vector<int>>& garden_pos_cnt)
 {
     int new_col = col - 2;
-    if (new_col <= 0)
+    if (new_col <= 0 && life>0)
         GAME_FAIL = true;
     else
     {
