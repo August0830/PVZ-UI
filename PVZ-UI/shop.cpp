@@ -55,7 +55,7 @@ void Shop::addPlant(QString s, QPointF pos)
     switch(Card::map[s])
     {
     case 0:
-        plant = new SunFlower;break;
+        plant = new Sunflower;break;
     case 1:
         plant =
 
