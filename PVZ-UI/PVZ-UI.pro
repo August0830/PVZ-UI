@@ -18,28 +18,56 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    basiczombie.cpp \
+    bucketzombie.cpp \
+    bullet.cpp \
     button.cpp \
     card.cpp \
+    cherrybomb.cpp \
+    conezombie.cpp \
+    doubleshooter.cpp \
+    footballzombie.cpp \
+    frozenshooter.cpp \
     main.cpp \
     mainwindow.cpp \
     map.cpp \
     mower.cpp \
+    nut.cpp \
     other.cpp \
+    peashooter.cpp \
     plant.cpp \
+    potatomine.cpp \
+    screenzombie.cpp \
     shop.cpp \
     shovel.cpp \
+    sun.cpp \
+    sunflower.cpp \
     zombie.cpp
 
 HEADERS += \
+    basiczombie.h \
+    bucketzombie.h \
+    bullet.h \
     button.h \
     card.h \
+    cherrybomb.h \
+    conezombie.h \
+    doubleshooter.h \
+    footballzombie.h \
+    frozenshooter.h \
     mainwindow.h \
     map.h \
     mower.h \
+    nut.h \
     other.h \
+    peashooter.h \
     plant.h \
+    potatomine.h \
+    screenzombie.h \
     shop.h \
     shovel.h \
+    sun.h \
+    sunflower.h \
     zombie.h
 
 FORMS += \

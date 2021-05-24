@@ -1,9 +1,21 @@
 #ifndef SHOP_H
 #define SHOP_H
 
-#include <QRectF>
+
 #include "other.h"
+#include "plant.h"
 #include "card.h"
+#include "sun.h"
+#include "sunflower.h"
+#include "peashooter.h"
+#include "doubleshooter.h"
+#include "frozenshooter.h"
+#include "nut.h"
+#include "potatomine.h"
+#include "cherrybomb.h"
+#include "basiczombie.h"
+
+
 //include from plant.h
 class Shop:public Other
 {

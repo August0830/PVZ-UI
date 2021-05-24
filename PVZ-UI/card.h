@@ -1,11 +1,11 @@
 #ifndef CARD_H
 #define CARD_H
 #include "other.h"
-#include <QString>
+
 class Card:public Other
 {
 public:
-    int counter;//可能是冷却的计时器??
+    int counter;//冷却的计时器
     QString text;
     Card(QString s);
     const static QMap<QString,int> map;//每种植物对应的编号 static表示所有card共用

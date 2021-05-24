@@ -1,16 +1,15 @@
 #include "card.h"
 #include "shop.h"
-#include <QGraphicsSceneMouseEvent>
+
 //初始化类通用的表格和哈希表
 const QMap<QString,int>Card::map = {{"Sunflower",0},{"PeaShooter",1},{"DoubleShooter",2}
-                                    ,{"FrozenShooter",3},{"Nut",4},{"TallNut",5}
-                                    ,{"PotatoMine",6},{"CherryBomb",7}};
-//{"Garlic",8}
+                                    ,{"FrozenShooter",3},{"Nut",4},{"PotatoMine",5}
+                                    ,{"CherryBomb",6}};
 const QVector<QString>Card::name = {"Sunflower","PeaShooter","DoubleShooter",
-                                   "FrozenShooter","Nut","TallNut","PotatoMine",
+                                   "FrozenShooter","Nut","PotatoMine",
                                    "CherryBomb"};
-const QVector<int>Card::price={50,100,150,150,50,100,25,50};
-const QVector<int>Card::cool = {227,227,606,606,606,606,227,606};
+const QVector<int>Card::price={50,100,150,50,175,25,200};
+const QVector<int>Card::cool = {227,227,606,606,227,606,227};
 Card::Card(QString s)
 {
     text=s;
@@ -44,7 +43,7 @@ void Card::advance(int phase)
         return ;
     update();//更新
     if(counter<cool[map[text]])
-        counter++;
+        ++counter;
 }
 void Card::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {

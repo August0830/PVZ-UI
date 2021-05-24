@@ -60,3 +60,13 @@ qt是基于对象来显示的，所以之前一部分按照面向过程书写的
 
 
 与面向过程的编程不同，这里是将更新状态、判断输赢和增加僵尸和计时器绑定，通过事件进行交互
+
+
+
+打包
+
+https://blog.csdn.net/Vichael_Chan/article/details/99414059
+
+https://blog.51cto.com/u_2678482/1616826
+
+https://blog.csdn.net/dbc_121/article/details/76794618?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_title-0&spm=1001.2101.3001.4242

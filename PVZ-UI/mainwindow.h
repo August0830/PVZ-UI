@@ -12,6 +12,13 @@
 #include "shovel.h"
 #include "map.h"
 #include "mower.h"
+
+#include "basiczombie.h"
+#include "bucketzombie.h"
+#include "conezombie.h"
+#include "footballzombie.h"
+#include "screenzombie.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE

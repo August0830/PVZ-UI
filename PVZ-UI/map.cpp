@@ -53,7 +53,7 @@ void Map::dropEvent(QGraphicsSceneDragDropEvent *event)
         }
         else
         {
-            Shop *shop = qgraphicsitem_cast<Shop*>(scene()->items(QPointF(830,15))[0]);
+            Shop *shop = qgraphicsitem_cast<Shop*>(scene()->items(QPointF(300,15))[0]);
             shop->addPlant(s,pos);
         }
     }

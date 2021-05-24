@@ -1,7 +1,8 @@
 #include "shop.h"
-
-Shop::Shop():sun_deposit(200)
+#include <QDebug>
+Shop::Shop()
 {
+    sun_deposit=200;
     counter=0;
     time = int(7.0*1000/33);
     Card* card=nullptr;
@@ -11,6 +12,7 @@ Shop::Shop():sun_deposit(200)
         card->setParentItem(this);//绑定父类
         card->setPos(-157+65*i,-2);
     }
+    QList<QGraphicsItem*> child = this->childItems();
     //show the plant choice
 }
 
@@ -38,31 +40,47 @@ void Shop::advance(int phase)
     if(++counter>=time)
     {
         counter=0;
-        //scene()->addItem(new Sun);
+        scene()->addItem(new Sun);
     }
 }
 
 void Shop::addPlant(QString s, QPointF pos)
 {
     QList<QGraphicsItem *>items = scene()->items(pos);//获取该位置上对象
-    //foreach (QGraphicsItem *item,items)
+    foreach (QGraphicsItem *item,items)
     {
-        //it(item->type()==Plant::Type) //如果已经有植物 不能再种
-            //return;
+        if(item->type()==Plant::Type) //如果已经有植物 不能再种
+            return;
     }
-    sun_deposit-=Card::price[Card::map[s]];
-    /*Plant *plant = nullptr;
-    switch(Card::map[s])
-    {
-    case 0:
-        plant = new Sunflower;break;
-    case 1:
-        plant =
 
-    } 填完其他植物来填写*/
-   // plant->setPos(pos);
-    //scene()->addItem(plant);
-    QList<QGraphicsItem*> child = childItems();
+    Plant *plant = nullptr;
+    int index = Card::map[s];
+    switch(index)
+    {
+        case 0:
+            plant = new Sunflower;break;
+        case 1:
+            plant =new PeaShooter;break;
+        case 2:
+            plant = new DoubleShooter;break;
+        case 3:
+            plant = new FrozenShooter;break;
+        case 4:
+            plant = new Nut;break;
+        case 5:
+            plant = new PotatoMine;break;
+        case 6:
+            plant = new CherryBomb;break;
+
+    }
+    plant->setPos(pos);
+    int price = Card::price[index];
+    int sun = sun_deposit;
+    sun -= price;
+    sun_deposit = sun_deposit-price;
+
+    scene()->addItem(plant);
+    QList<QGraphicsItem*> child = this->childItems();
     foreach(QGraphicsItem *item,child)
     {
         Card *card = qgraphicsitem_cast<Card*>(item);
@@ -71,7 +89,4 @@ void Shop::addPlant(QString s, QPointF pos)
     }
     counter=0;
 }
-/*{"Sunflower",0},{"PeaShooter",1},{"DoubleShooter",2}
-,{"FrozenShooter",3},{"Nut",4},{"HighNut",5}
-,{"PotatoMine",6},{"CherryBomb",7}
- */
+
